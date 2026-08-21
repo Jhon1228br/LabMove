@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6fb;
+      color: #172033;
+    }
+
+    header {
+      background: linear-gradient(135deg, #172033, #405a7d);
+      color: white;
+      padding: 35px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 42px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      opacity: .85;
+    }
+
+    nav {
+      background: white;
+      padding: 12px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 3px 12px #0001;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #172033;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 25px #00000010;
+    }
+
+    .hero h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .metric {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px #0001;
+    }
+
+    .metric span {
+      font-size: 30px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      margin: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 20px #00000010;
+    }
+
+    .card h2 {
+      margin-bottom: 15px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d8deea;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button.action {
+      background: #172033;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 3px;
+    }
+
+    button.action:hover {
+      opacity: .85;
+    }
+
+    .idea,
+    .project {
+      border: 1px solid #e1e5ed;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .idea h3,
+    .project h3 {
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #edf1f7;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .swot {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .swot div {
+      background: #f5f7fa;
+      padding: 18px;
+      border-radius: 12px;
+    }
+
+    .swot h3 {
+      margin-bottom: 8px;
+    }
+
+    #resultadoIA {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f0f4fa;
+      border-radius: 12px;
+      white-space: pre-line;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #667085;
+    }
+
+    @media(max-width: 750px) {
+      .grid,
+      .swot {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      header h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚀 LabMove</h1>
+  <p>Laboratório de Ideias da Escola</p>
+</header>
+
+<nav>
+  <button onclick="irPara('inicio')">Início</button>
+  <button onclick="irPara('ideiasArea')">Ideias</button>
+  <button onclick="irPara('projetosArea')">Projetos</button>
+  <button onclick="irPara('swotArea')">SWOT</button>
+</nav>
+
+<main>
+
+  <section class="hero" id="inicio">
+    <h2>Transforme problemas em soluções.</h2>
+
+    <p>
+      O LabMove é um clube de inovação onde os próprios alunos
+      identificam problemas da escola e trabalham juntos para
+      criar soluções criativas e tecnológicas.
+    </p>
+  </section>
+
+  <section class="dashboard">
+
+    <div class="metric">
+      <span>💡</span>
+      <strong id="totalIdeias">0</strong>
+      Ideias
+    </div>
+
+    <div class="metric">
+      <span>👍</span>
+      <strong id="totalVotos">0</strong>
+      Votos
+    </div>
+
+    <div class="metric">
+      <span>🛠️</span>
+      <strong id="totalProjetos">0</strong>
+      Projetos
+    </div>
+
+    <div class="metric">
+      <span>🏆</span>
+      <strong id="totalConcluidos">0</strong>
+      Concluídos
+    </div>
+
+  </section>
+
+  <div class="grid">
+
+    <section class="card">
+
+      <h2>💡 Criar nova ideia</h2>
+
+      <input
+        id="titulo"
+        placeholder="Nome da ideia"
+      >
+
+      <textarea
+        id="descricao"
+        placeholder="Qual problema da escola você quer resolver?"
+      ></textarea>
+
+      <select id="categoria">
+
+        <option value="">
+          Escolha uma categoria
+        </option>
+
+        <option>
+          Tecnologia
+        </option>
+
+        <option>
+          Sustentabilidade
+        </option>
+
+        <option>
+          Espaços
+        </option>
+
+        <option>
+          Educação
+        </option>
+
+        <option>
+          Eventos
+        </option>
+
+      </select>
+
+      <button
+        class="action"
+        onclick="analisarIA()"
+      >
+        🤖 Analisar com IA
+      </button>
+
+      <button
+        class="action"
+        onclick="adicionarIdeia()"
+      >
+        ➕ Cadastrar ideia
+      </button>
+
+      <div id="resultadoIA"></div>
+
+    </section>
+
+
+    <section class="card" id="ideiasArea">
+
+      <h2>🔥 Ideias dos alunos</h2>
+
+      <div id="listaIdeias"></div>
+
+    </section>
+
+  </div>
+
+
+  <section class="card" id="projetosArea">
+
+    <h2>🛠️ Projetos</h2>
+
+    <div id="listaProjetos"></div>
+
+  </section>
+
+
+  <section class="card" id="swotArea">
+
+    <h2>📊 Matriz SWOT / FOFA</h2>
+
+    <div class="swot">
+
+      <div>
+        <h3>💪 Forças</h3>
+        <p>
+          Participação dos alunos,
+          aprendizado prático,
+          criatividade e integração
+          entre diferentes turmas.
+        </p>
+      </div>
+
+      <div>
+        <h3>⚠️ Fraquezas</h3>
+        <p>
+          Dependência de materiais,
+          necessidade de organização
+          e falta de experiência.
+        </p>
+      </div>
+
+      <div>
+        <h3>🚀 Oportunidades</h3>
+        <p>
+          Parcerias com empresas,
+          participação em feiras,
+          destaque para a escola e
+          desenvolvimento profissional.
+        </p>
+      </div>
+
+      <div>
+        <h3>🛑 Ameaças</h3>
+        <p>
+          Falta de investimento,
+          desinteresse dos alunos e
+          dificuldade de manter o projeto ativo.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  LabMove — Alunos criando soluções para a própria escola 🚀
+</footer>
+
+
+<script>
+
+let ideias =
+  JSON.parse(localStorage.getItem("labmoveIdeias")) || [];
+
+let projetos =
+  JSON.parse(localStorage.getItem("labmoveProjetos")) || [];
+
+
+/* =========================
+   SALVAR DADOS
+========================= */
+
+function salvar() {
+
+  localStorage.setItem(
+    "labmoveIdeias",
+    JSON.stringify(ideias)
+  );
+
+  localStorage.setItem(
+    "labmoveProjetos",
+    JSON.stringify(projetos)
+  );
+
+}
+
+
+/* =========================
+   ADICIONAR IDEIA
+========================= */
+
+function adicionarIdeia() {
+
+  const titulo =
+    document.getElementById("titulo").value.trim();
+
+  const descricao =
+    document.getElementById("descricao").value.trim();
+
+  const categoria =
+    document.getElementById("categoria").value;
+
+
+  if (!titulo || !descricao || !categoria) {
+
+    alert("Preencha todos os campos!");
+
+    return;
+
+  }
+
+
+  ideias.push({
+
+    id: Date.now(),
+
+    titulo,
+
+    descricao,
+
+    categoria,
+
+    votos: 0,
+
+    status: "Nova"
+
+  });
+
+
+  salvar();
+
+  document.getElementById("titulo").value = "";
+
+  document.getElementById("descricao").value = "";
+
+  document.getElementById("categoria").value = "";
+
+  document.getElementById("resultadoIA").style.display =
+    "none";
+
+
+  atualizar();
+
+}
+
+
+/* =========================
+   VOTAR
+========================= */
+
+function votar(id) {
+
+  const ideia =
+    ideias.find(i => i.id === id);
+
+  if (!ideia) return;
+
+  ideia.votos++;
+
+  salvar();
+
+  atualizar();
+
+}
+
+
+/* =========================
+   CRIAR PROJETO
+========================= */
+
+function criarProjeto(id) {
+
+  const ideia =
+    ideias.find(i => i.id === id);
+
+  if (!ideia) return;
+
+
+  if (
+    projetos.some(
+      p => p.ideiaId === id
+    )
+  ) {
+
+    alert("Essa ideia já virou um projeto!");
+
+    return;
+
+  }
+
+
+  projetos.push({
+
+    id: Date.now(),
+
+    ideiaId: id,
+
+    nome: ideia.titulo,
+
+    descricao: ideia.descricao,
+
+    status: "Planejamento"
+
+  });
+
+
+  ideia.status = "Em projeto";
+
+  salvar();
+
+  atualizar();
+
+}
+
+
+/* =========================
+   ALTERAR STATUS
+========================= */
+
+function mudarStatus(id, status) {
+
+  const projeto =
+    projetos.find(p => p.id === id);
+
+  if (!projeto) return;
+
+  projeto.status = status;
+
+  salvar();
+
+  atualizar();
+
+}
+
+
+/* =========================
+   IA
+========================= */
+
+function analisarIA() {
+
+  const titulo =
+    document.getElementById("titulo").value.trim();
+
+  const descricao =
+    document.getElementById("descricao").value.trim();
+
+  const categoria =
+    document.getElementById("categoria").value;
+
+
+  if (!titulo || !descricao || !categoria) {
+
+    alert(
+      "Preencha título, descrição e categoria antes de usar a IA."
+    );
+
+    return;
+
+  }
+
+
+  let prioridade = "Média";
+
+
+  const texto =
+    (titulo + " " + descricao).toLowerCase();
+
+
+  if (
+    texto.includes("energia") ||
+    texto.includes("segurança") ||
+    texto.includes("acessibilidade") ||
+    texto.includes("desperdício")
+  ) {
+
+    prioridade = "Alta";
+
+  }
+
+
+  let sugestoes = [];
+
+
+  if (categoria === "Sustentabilidade") {
+
+    sugestoes = [
+
+      "Criar um protótipo sustentável.",
+
+      "Medir o consumo antes e depois da solução.",
+
+      "Pesquisar materiais recicláveis.",
+
+      "Apresentar os resultados para a escola."
+
+    ];
+
+  }
+
+  else if (categoria === "Tecnologia") {
+
+    sugestoes = [
+
+      "Criar primeiro um protótipo simples.",
+
+      "Testar com alguns alunos.",
+
+      "Coletar opiniões dos usuários.",
+
+      "Melhorar a solução com base nos testes."
+
+    ];
+
+  }
+
+  else {
+
+    sugestoes = [
+
+      "Conversar com alunos e funcionários.",
+
+      "Identificar a principal causa do problema.",
+
+      "Criar uma solução de baixo custo.",
+
+      "Testar a solução antes da implementação."
+
+    ];
+
+  }
+
+
+  const resultado =
+    document.getElementById("resultadoIA");
+
+
+  resultado.style.display = "block";
+
+
+  resultado.innerHTML = `
+
+🤖 ANÁLISE INTELIGENTE DO LABMOVE
+
+━━━━━━━━━━━━━━━━━━━━
+
+📌 Problema:
+
+${descricao}
+
+
+📊 Categoria:
+
+${categoria}
+
+
+🔥 Prioridade:
+
+${prioridade}
+
+
+💡 Sugestões:
+
+${sugestoes.map(
+  s => "• " + s
+).join("<br>")}
+
+
+🧠 Observação:
+
+A análise serve como apoio aos alunos.
+A decisão final sobre o projeto deve ser feita pela equipe.
+
+`;
+
+}
+
+
+/* =========================
+   ATUALIZAR INTERFACE
+========================= */
+
+function atualizar() {
+
+  document.getElementById(
+    "totalIdeias"
+  ).textContent = ideias.length;
+
+
+  document.getElementById(
+    "totalVotos"
+  ).textContent =
+    ideias.reduce(
+      (total, i) => total + i.votos,
+      0
+    );
+
+
+  document.getElementById(
+    "totalProjetos"
+  ).textContent =
+    projetos.length;
+
+
+  document.getElementById(
+    "totalConcluidos"
+  ).textContent =
+    projetos.filter(
+      p => p.status === "Concluído"
+    ).length;
+
+
+  const lista =
+    document.getElementById(
+      "listaIdeias"
+    );
+
+
+  if (!ideias.length) {
+
+    lista.innerHTML =
+      "<p>Nenhuma ideia cadastrada ainda.</p>";
+
+  }
+
+  else {
+
+    lista.innerHTML =
+      ideias
+      .sort(
+        (a,b) => b.votos - a.votos
+      )
+      .map(i => `
+
+        <div class="idea">
+
+          <h3>
+            ${escapeHTML(i.titulo)}
+          </h3>
+
+          <span class="badge">
+            ${escapeHTML(i.categoria)}
+          </span>
+
+          <p>
+            ${escapeHTML(i.descricao)}
+          </p>
+
+          <small>
+            Status: ${i.status}
+          </small>
+
+          <br><br>
+
+          <button
+            class="action"
+            onclick="votar(${i.id})"
+          >
+            👍 Apoiar (${i.votos})
+          </button>
+
+          <button
+            class="action"
+            onclick="criarProjeto(${i.id})"
+          >
+            🛠️ Transformar em projeto
+          </button>
+
+        </div>
+
+      `)
+      .join("");
+
+  }
+
+
+  const listaProjetos =
+    document.getElementById(
+      "listaProjetos"
+    );
+
+
+  if (!projetos.length) {
+
+    listaProjetos.innerHTML =
+      "<p>Nenhum projeto criado ainda.</p>";
+
+  }
+
+  else {
+
+    listaProjetos.innerHTML =
+      projetos.map(p => `
+
+        <div class="project">
+
+          <h3>
+            ${escapeHTML(p.nome)}
+          </h3>
+
+          <p>
+            ${escapeHTML(p.descricao)}
+          </p>
+
+          <select
+            onchange="mudarStatus(
+              ${p.id},
+              this.value
+            )"
+          >
+
+            <option
+              ${p.status === "Planejamento"
+                ? "selected"
+                : ""}
+            >
+              Planejamento
+            </option>
+
+            <option
+              ${p.status === "Desenvolvimento"
+                ? "selected"
+                : ""}
+            >
+              Desenvolvimento
+            </option>
+
+            <option
+              ${p.status === "Teste"
+                ? "selected"
+                : ""}
+            >
+              Teste
+            </option>
+
+            <option
+              ${p.status === "Concluído"
+                ? "selected"
+                : ""}
+            >
+              Concluído
+            </option>
+
+          </select>
+
+        </div>
+
+      `)
+      .join("");
+
+  }
+
+}
+
+
+/* =========================
+   SEGURANÇA
+========================= */
+
+function escapeHTML(text) {
+
+  return text
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   NAVEGAÇÃO
+========================= */
+
+function irPara(id) {
+
+  document
+    .getElementById(id)
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+
+/* INICIAR */
+
+atualizar();
+
+</script>
+
+</body>
+</html>
